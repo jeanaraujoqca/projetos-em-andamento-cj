@@ -105,7 +105,7 @@ def submit_form():
                     botao_novo = driver.find_element(By.XPATH, '//*[@id="appRoot"]/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[1]/button/span')
                     botao_novo.click()                          
                     sleep(5)
-                    #cuidado com esse sleep pode ter ocasionado alguma bronca
+                    # cuidado com esse sleep pode ter ocasionado alguma bronca
                     # Switch to iframe
                     iframe = driver.find_elements(By.XPATH, "//iframe")
                     driver.switch_to.frame(iframe[0])
