@@ -18,7 +18,7 @@ def submit_form():
     # Retrieve user inputs
     email = email_entry.get()
     senha = senha_entry.get()
-    
+    file_path = file_path_label.cget("text")
     
     # Check if email is provided
     if not email:
@@ -28,6 +28,7 @@ def submit_form():
     if not senha:
         messagebox.showwarning("Aviso", "Por favor, insira a senha.")
         return
+    
     # Load DataFrame from file
     file_path = file_path_label['text']
     if file_path.endswith('.xlsx'):
@@ -214,14 +215,15 @@ def submit_form():
 def select_file():
     file_path = filedialog.askopenfilename(filetypes=[('Excel Files', '*.xlsx')])
     file_path_label.config(text=file_path)
-    if file_path:  # Check if a file was selected
-        submit_button.pack()  # Show the submit button
+    if file_path:
+        submit_button.pack()
+        messagebox.showinfo("Alerta", "Alerta de duas etapas")  
 
 # Initialize Tkinter
 root = tk.Tk()
 root.title('Automatização de Preenchimento - SharePoint')
 
-# Create GUI elements
+# Criar elementos da GUI
 email_label = tk.Label(root, text='Email:')
 email_label.pack()
 email_entry = tk.Entry(root)
@@ -232,26 +234,6 @@ senha_label.pack()
 senha_entry = tk.Entry(root, show='*')
 senha_entry.pack()
 
-file_label = tk.Label(root, text='Você possui verificação de duas etapas ?')
-file_label.pack()
-file_path_label = tk.Label(root, text='')
-file_path_label.pack()
-
-# Checkbox para dois fatores
-two_factor_var = tk.StringVar()
-two_factor_var.set("Não")  # Valor padrão
-
-# Função para atualizar a variável de dois fatores e mostrar a seleção
-def update_two_factor():
-    two_factor_selection = two_factor_var.get()
-    print(f"Dois fatores: {two_factor_selection}")
-
-# Criação do Checkbutton para "Sim"
-tk.Checkbutton(root, text="Sim", variable=two_factor_var, onvalue="Sim", offvalue="Não", command=update_two_factor).pack()
-
-# Criação do Checkbutton para "Não"
-tk.Checkbutton(root, text="Não", variable=two_factor_var, onvalue="Não", offvalue="Sim", command=update_two_factor).pack()
-
 file_label = tk.Label(root, text='Selecione o arquivo Excel:')
 file_label.pack()
 file_path_label = tk.Label(root, text='')
@@ -261,7 +243,5 @@ file_button = tk.Button(root, text='Selecionar Arquivo', command=select_file)
 file_button.pack()
 
 submit_button = tk.Button(root, text='Iniciar Preenchimento', command=submit_form)
-# Do not pack submit_button initially
 
-# Run Tkinter main loop
 root.mainloop()
