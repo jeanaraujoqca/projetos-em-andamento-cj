@@ -12,8 +12,6 @@ from selenium.common.exceptions import TimeoutException
 from time import sleep
 import os
 
-print('teste')
-
 # Function to handle form submission
 def submit_form():
     # Retrieve user inputs
