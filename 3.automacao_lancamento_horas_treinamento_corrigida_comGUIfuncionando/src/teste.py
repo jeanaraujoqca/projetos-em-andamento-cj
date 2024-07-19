@@ -13,14 +13,14 @@ from selenium.common.exceptions import TimeoutException
 from time import sleep
 import os
 
-# Function to handle form submission
+# Função para preencher os dados no site
 def submit_form():
-    # Retrieve user inputs
+    # Recebe inputs do usuário
     email = email_entry.get()
     senha = senha_entry.get()
+    file_path = file_path_label.cget("text")
     
-    
-    # Check if email is provided
+    # Checa se o e-mail e senha foram informados
     if not email:
         messagebox.showwarning("Aviso", "Por favor, insira o e-mail.")
         return
@@ -28,12 +28,13 @@ def submit_form():
     if not senha:
         messagebox.showwarning("Aviso", "Por favor, insira a senha.")
         return
-    # Load DataFrame from file
+    
+    # Carregar o arquivo
     file_path = file_path_label['text']
     if file_path.endswith('.xlsx'):
         df = pd.read_excel(file_path)
 
-        # Initialize Selenium
+        # Iniciar Selenium
         service = Service(ChromeDriverManager().install())
         options = webdriver.ChromeOptions()
         driver = webdriver.Chrome(service=service, options=options)
@@ -45,11 +46,11 @@ def submit_form():
         url_sharepoint = 'https://queirozcavalcanti.sharepoint.com/sites/qca360/Lists/treinamentos_qca/AllItems.aspx'
 
         try:
-            # Navigate to SharePoint
+            # Inicia o Chrome com o url do Sharepoint
             driver.get(url_sharepoint)
             sleep(5)
 
-            # Handle login
+            # Realiza login
             try:
                 email_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='i0116']")))
                 email_input.send_keys(email)
@@ -83,7 +84,7 @@ def submit_form():
             casos_sucesso = []
             casos_fracasso = []
 
-            # Iterate over DataFrame rows
+            # Percorre o df 
             for index, id in enumerate(df['ID']):
                 print('Entramos dentro do laço de repetição')
                 try:
@@ -101,11 +102,11 @@ def submit_form():
 
                     print(f'Adicionando informações do colaborador: {colaborador}')
 
-                    # Add new training
+                    # Add novo treinamento
                     botao_novo = driver.find_element(By.XPATH, '//*[@id="appRoot"]/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[1]/button/span')
                     botao_novo.click()                          
                     sleep(5)
-                    #cuidado com esse sleep pode ter ocasionado alguma bronca
+                    # cuidado com esse sleep pode ter ocasionado alguma bronca
                     # Switch to iframe
                     iframe = driver.find_elements(By.XPATH, "//iframe")
                     driver.switch_to.frame(iframe[0])
@@ -125,7 +126,7 @@ def submit_form():
                         elemento3 = wait.until(EC.element_to_be_clickable((By.XPATH, endereco3)))
                         elemento3.click()
 
-                    # Fill form fields
+                    # Preenche os dados informados na planilha
                     clica_seleciona_informacao(endereco1='//div[@title="NOME DO INTEGRANTE"]',
                                                 endereco2='//*[@id="powerapps-flyout-react-combobox-view-0"]/div/div/div/div/input', valor2=str(colaborador),
                                                 endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-0"]/div/ul/li/div/div/span[1][text() = "{str(colaborador)}"]')
@@ -210,18 +211,19 @@ def submit_form():
             print(f'Erro ao iniciar o navegador: {str(e)}')
             driver.quit()
 
-# Function to handle file selection
+# Função para o usuário carregar os arquivos
 def select_file():
     file_path = filedialog.askopenfilename(filetypes=[('Excel Files', '*.xlsx')])
     file_path_label.config(text=file_path)
-    if file_path:  # Check if a file was selected
-        submit_button.pack()  # Show the submit button
+    if file_path:
+        submit_button.pack()
+        messagebox.showinfo("Alerta", "Alerta de duas etapas")  
 
-# Initialize Tkinter
+# Inicia Tkinter
 root = tk.Tk()
 root.title('Automatização de Preenchimento - SharePoint')
 
-# Create GUI elements
+# Criar elementos da GUI
 email_label = tk.Label(root, text='Email:')
 email_label.pack()
 email_entry = tk.Entry(root)
@@ -232,26 +234,6 @@ senha_label.pack()
 senha_entry = tk.Entry(root, show='*')
 senha_entry.pack()
 
-file_label = tk.Label(root, text='Você possui verificação de duas etapas ?')
-file_label.pack()
-file_path_label = tk.Label(root, text='')
-file_path_label.pack()
-
-# Checkbox para dois fatores
-two_factor_var = tk.StringVar()
-two_factor_var.set("Não")  # Valor padrão
-
-# Função para atualizar a variável de dois fatores e mostrar a seleção
-def update_two_factor():
-    two_factor_selection = two_factor_var.get()
-    print(f"Dois fatores: {two_factor_selection}")
-
-# Criação do Checkbutton para "Sim"
-tk.Checkbutton(root, text="Sim", variable=two_factor_var, onvalue="Sim", offvalue="Não", command=update_two_factor).pack()
-
-# Criação do Checkbutton para "Não"
-tk.Checkbutton(root, text="Não", variable=two_factor_var, onvalue="Não", offvalue="Sim", command=update_two_factor).pack()
-
 file_label = tk.Label(root, text='Selecione o arquivo Excel:')
 file_label.pack()
 file_path_label = tk.Label(root, text='')
@@ -260,8 +242,6 @@ file_path_label.pack()
 file_button = tk.Button(root, text='Selecionar Arquivo', command=select_file)
 file_button.pack()
 
-submit_button = tk.Button(root, text='Iniciar Preenchimento', command=submit_form)
-# Do not pack submit_button initially
+submit_button = tk.Button(root, text='Iniciar Automação', command=submit_form)
 
-# Run Tkinter main loop
 root.mainloop()
