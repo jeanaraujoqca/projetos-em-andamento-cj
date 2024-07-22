@@ -22,7 +22,8 @@ import shutil
 
 # --- ORGANIZAR OS CAMINHOS DE DIRETÓRIO --- [ X ]
 BASE_DIR = os.getcwd()
-DATA_DIR = os.path.join(BASE_DIR, 'data')
+DATA_DIR = os.path.join(BASE_DIR, '2.automacao_registros_follow_up_taci')
+DATA_DIR = os.path.join(DATA_DIR, 'data')
 
 # --- SOLICITAR AS CREDENCIAIS PARA QUEM ESTÁ UTILIZANDO O PROGRAMA --- [ X ]
 nome_usuario = 'Denise Ferreira dos Santos'
@@ -31,12 +32,10 @@ senha_usuario = 'Qca123456##'
 
 # --- CARREGAR A BASE DE DADOS COM AS INFORMAÇÕES DOS FOLLOW UPs --- [ X ]
 file_path = [os.path.join(DATA_DIR, file) for file in os.listdir(DATA_DIR)][0]
-df_initial = pd.read_csv(file_path, encoding='utf-8', sep=';')
+df_initial = pd.read_excel(file_path)
 # df_initial = pd.read_excel(file_path)
 # df = df_initial.copy()
-df = df_initial[['Tags', 'Descrição']]
-df.loc[:, 'Numero Processo'] = df['Descrição'].apply(lambda x: str(x).split(' ')[0])
-df.loc[:, 'Follow Up de Acordo'] = df['Tags'] + ': ' + df['Descrição']
+df = df_initial
 
 # --- INICIALIZAR O BROWSER --- [ X ]
 service = Service(ChromeDriverManager().install())
@@ -82,8 +81,9 @@ print('Entramos dentro do Perfoma. Seguindo para o próximo passo...\n')
 # --- PESQUISAR PELO NÚMERO DO PROCESSO --- [ X ]
 print('Iniciando as iterações sobre os processos\n')
 
-for index, processo in enumerate(df['Numero Processo']):
-    follow_up = df.loc[index, 'Follow Up de Acordo']
+for index, row in df.iterrows():
+    processo = row['Número do Processo']
+    follow_up = row['Descrição Follow Up']
     try:
         pesquisar_processo = driver.find_element(By.XPATH, '//*[@id="textFinder"]')
         sleep(1)
