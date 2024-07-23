@@ -23,11 +23,10 @@ import json
 
 # --- ORGANIZAR OS CAMINHOS DE DIRETÓRIO --- [ X ]
 BASE_DIR = os.getcwd()
-DATA_DIR = os.path.join(BASE_DIR, '2.automacao_registros_follow_up_taci')
-DATA_DIR = os.path.join(DATA_DIR, 'data')
+DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 # --- SOLICITAR AS CREDENCIAIS PARA QUEM ESTÁ UTILIZANDO O PROGRAMA --- [ X ]
-with open('C:/Users/jeanaraujo/ForaDoDrive/Operações/config_senha', 'r') as config_file:
+with open('config_senha.json', 'r') as config_file:
     config = json.load(config_file)
     nome_usuario = config['nome_usuario']
     email_usuario = config['email_usuario']
@@ -75,9 +74,7 @@ user_password.send_keys(Keys.ENTER)
 sleep(2)
 botao_confirmar = wait.until(EC.element_to_be_clickable((By.XPATH, '//*[@id="idSIButton9"]')))
 botao_confirmar.click()
-
-wait.until(EC.presence_of_element_located((By.XPATH, '/html/body/div[5]/div[2]/div/div[1]/div[1]/ol/li/a')))
-sleep(1)
+sleep(15)
 
 print('Entramos dentro do Perfoma. Seguindo para o próximo passo...\n')
 
@@ -90,6 +87,7 @@ for index, row in df.iterrows():
     try:
         pesquisar_processo = driver.find_element(By.XPATH, '//*[@id="textFinder"]')
         sleep(1)
+        pesquisar_processo.click
         pesquisar_processo.send_keys(processo)
         pesquisar_processo.send_keys(Keys.ENTER)
         sleep(2)
