@@ -1,6 +1,7 @@
 import tkinter as tk
-from tkinter import filedialog
-from tkinter import messagebox
+from tkinter import filedialog, messagebox
+from tkinter import *
+from tkinter import Frame
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -12,6 +13,12 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from time import sleep
 import os
+
+
+# pip install ttkbootstrap
+# pip install git+https://github.com/israel-dryer/ttkbootstrap
+import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
 
 # Função para preencher os dados no site
 def submit_form():
@@ -216,32 +223,65 @@ def select_file():
     file_path = filedialog.askopenfilename(filetypes=[('Excel Files', '*.xlsx')])
     file_path_label.config(text=file_path)
     if file_path:
+        file_name = os.path.basename(file_path) #-----------------------
+        file_path_label.config(text=file_name) #------------------------
         submit_button.pack()
-        messagebox.showinfo("Alerta", "Alerta de duas etapas")  
+        messagebox.showinfo("Alerta", "Se você possui verificação de duas etapas apos iniciar a automação você possui 60 segundos para aceitar o pedido no email")  
+
+
+
+
+# root = ttk.Window(themename="darkly")  # Escolha o tema desejado tema que eu quero 
 
 # Inicia Tkinter
-root = tk.Tk()
+root = ttk.Window()
+# Titulo
 root.title('Automatização de Preenchimento - SharePoint')
+# Janela 
+root.geometry('950x500+300+200')
+# Dimenção fixa
+root.resizable(False,False)
+root.configure(bg='#fff')
 
-# Criar elementos da GUI
-email_label = tk.Label(root, text='Email:')
+# Imagem
+img = tk.PhotoImage(file=r'C:\Users\tanuscorrea\Documents\projetos-em-andamento-cj\3.automacao_lancamento_horas_treinamento_corrigida_comGUIfuncionando\Foto\login.png')
+img_label = tk.Label(root, image=img, bg='white')
+img_label.place(x=50, y=50)  # Posições X e Y em pixels
+
+# Frame
+frame = Frame(root,width=350,height=350,bg="red")
+frame.place(x=500,y=70)
+
+# Nome loguin
+titulo = tk.Label(frame, text='Login', bg='white', fg='black', font =('Microsoft YaHei UI Light',23,'bold'))
+titulo.pack(pady=10)
+
+# Imput email
+
+email_label = tk.Label(frame, width=25,fg='black',bd=0,bg='white',font =('Microsoft YaHei UI Light',8,'bold'),text='Email:')
+email_label.place(x=40,y=80)
 email_label.pack()
-email_entry = tk.Entry(root)
+
+email_entry = tk.Entry(frame, width=25,fg='black',bg='white',font =('Microsoft YaHei UI Light',10,'bold'),text='Email:')
 email_entry.pack()
 
-senha_label = tk.Label(root, text='Senha:')
+# Imput senha
+senha_label = tk.Label(frame, width=25, bg='white',font =('Microsoft YaHei UI Light',8,'bold'), text='Senha:')
 senha_label.pack()
-senha_entry = tk.Entry(root, show='*')
+senha_entry = tk.Entry(frame, width=25, bg='white',font =('Microsoft YaHei UI Light',10,'bold'), show='*')
 senha_entry.pack()
 
-file_label = tk.Label(root, text='Selecione o arquivo Excel:')
+# ----------------------------------------------------------------------------
+file_label = tk.Label(frame,text='Selecione o arquivo Excel:')
 file_label.pack()
-file_path_label = tk.Label(root, text='')
+file_path_label = tk.Label(frame,width=25, text='')
 file_path_label.pack()
 
-file_button = tk.Button(root, text='Selecionar Arquivo', command=select_file)
+file_button = ttk.Button(frame, text='Selecionar Arquivo', command=select_file, bootstyle="info-outline")
 file_button.pack()
+# ----------------------------------------------------------------------------
+# success style
 
-submit_button = tk.Button(root, text='Iniciar Automação', command=submit_form)
+submit_button = ttk.Button(frame, text='Iniciar Automação', command=submit_form, bootstyle="success-outline")
 
 root.mainloop()
