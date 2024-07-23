@@ -19,6 +19,7 @@ import numpy as np
 import openpyxl
 import os
 import shutil
+import json
 
 # --- ORGANIZAR OS CAMINHOS DE DIRETÓRIO --- [ X ]
 BASE_DIR = os.getcwd()
@@ -26,9 +27,11 @@ DATA_DIR = os.path.join(BASE_DIR, '2.automacao_registros_follow_up_taci')
 DATA_DIR = os.path.join(DATA_DIR, 'data')
 
 # --- SOLICITAR AS CREDENCIAIS PARA QUEM ESTÁ UTILIZANDO O PROGRAMA --- [ X ]
-nome_usuario = 'Denise Ferreira dos Santos'
-email_usuario = 'denisesantos@queirozcavalcanti.adv.br'
-senha_usuario = 'Qca123456##'
+with open('C:/Users/jeanaraujo/ForaDoDrive/Operações/config_senha', 'r') as config_file:
+    config = json.load(config_file)
+    nome_usuario = config['nome_usuario']
+    email_usuario = config['email_usuario']
+    senha_usuario = config['senha_usuario']
 
 # --- CARREGAR A BASE DE DADOS COM AS INFORMAÇÕES DOS FOLLOW UPs --- [ X ]
 file_path = [os.path.join(DATA_DIR, file) for file in os.listdir(DATA_DIR)][0]
