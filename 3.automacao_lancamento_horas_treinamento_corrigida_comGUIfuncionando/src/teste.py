@@ -13,6 +13,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from time import sleep
 import os
+import threading
 
 
 # pip install ttkbootstrap
@@ -217,6 +218,10 @@ def submit_form():
         print(f'Erro ao iniciar o navegador: {str(e)}')
         driver.quit()
 
+def start_automation():
+    
+    thread = threading.Thread(target=submit_form)
+    thread.start()
 
 # Função para o usuário carregar os arquivos
 def select_file():
@@ -241,7 +246,7 @@ root.resizable(False,False)
 root.configure(bg='#fff')
 
 # Imagem
-img = tk.PhotoImage(file=r'C:\Users\tanuscorrea\Documents\projetos-em-andamento-cj\3.automacao_lancamento_horas_treinamento_corrigida_comGUIfuncionando\Foto\login.png')
+img = tk.PhotoImage(file=r'C:\Users\jeanaraujo\ForaDoDrive\Operações\projetos-em-andamento-cj\3.automacao_lancamento_horas_treinamento_corrigida_comGUIfuncionando\Foto\login.png')
 img_label = tk.Label(root, image=img, bg='white')
 img_label.place(x=50, y=50)  # Posições X e Y em pixels
 
@@ -283,6 +288,6 @@ file_button.pack(side='left', padx=10)
 # ----------------------------------------------------------------------------
 # success style
 
-submit_button = ttk.Button(frame, text='Iniciar Automação', command=submit_form, bootstyle="success-outline")
+submit_button = ttk.Button(frame, text='Iniciar Automação', command=start_automation, bootstyle="success-outline")
 
 root.mainloop()
