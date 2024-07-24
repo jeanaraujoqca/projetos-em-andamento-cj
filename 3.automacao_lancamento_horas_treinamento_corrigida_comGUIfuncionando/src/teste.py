@@ -272,7 +272,7 @@ spacer = tk.Frame(frame, height=15, bg='white') #espaço  vazio
 spacer.pack()
 # ----------------------------------------------------------------------------
 
-file_path_label = tk.Label(frame,width=20, text='')
+file_path_label = tk.Label(frame,width=25, text='')
 file_path_label.pack()
 
 spacer = tk.Frame(frame, height=15, bg='white') #espaço  vazio
