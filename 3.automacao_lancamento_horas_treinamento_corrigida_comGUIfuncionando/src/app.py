@@ -18,6 +18,7 @@ import threading
 
 # pip install ttkbootstrap
 # pip install git+https://github.com/israel-dryer/ttkbootstrap
+
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
@@ -59,18 +60,20 @@ def submit_form():
 
         # Realiza login
         try:
+            sleep(1)
             email_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='i0116']")))
             email_input.send_keys(email)
-            sleep(.5)
+            sleep(0.5)
             avancar_button = driver.find_element(By.XPATH, "//input[@id='idSIButton9']")
             avancar_button.click()
         except:
             pass
 
         try:
+            sleep(1)
             senha_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='i0118']")))
             senha_input.send_keys(senha)
-            sleep(.5)
+            sleep(1)
             avancar_button = driver.find_element(By.XPATH, "//input[@id='idSIButton9']")
             avancar_button.click()
             sleep(3)
@@ -97,7 +100,7 @@ def submit_form():
             try:
                 colaborador = df.loc[index, 'Nome']
                 email_colaborador = df.loc[index, 'Email']
-                equipe = df.loc[index, 'EQUIPE']
+                # equipe = df.loc[index, 'EQUIPE']
                 unidade = df.loc[index, 'UNIDADE']
                 treinamento = df.loc[index, 'TREINAMENTO']
                 tipo_de_treinamento = df.loc[index, 'TIPO DO TREINAMENTO']
@@ -144,15 +147,15 @@ def submit_form():
                                             endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-1"]/div/ul/li/div/span[text() = "{str(email_colaborador)}"]')
                 sleep(2)
 
-                clica_seleciona_informacao(endereco1='//div[@title="EQUIPE."]',
-                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-2"]/div/div/div/div/input', valor2=str(equipe),
-                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-2"]/div/ul/li/div/span[text() = "{str(equipe)}"]')
-                sleep(2)
+                # clica_seleciona_informacao(endereco1='//div[@title="EQUIPE."]',
+                #                             endereco2='//*[@id="powerapps-flyout-react-combobox-view-2"]/div/div/div/div/input', valor2=str(equipe),
+                #                             endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-2"]/div/ul/li/div/span[text() = "{str(equipe)}"]')
+                # sleep(2)
 
                 clica_seleciona_informacao(endereco1='//div[@title="UNIDADE"]',
-                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-3"]/div/div/div/div/input', valor2=str(unidade),
-                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-3"]/div/ul/li/div/span[text() = "{str(unidade)}"]')
-                sleep(2)
+                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-2"]/div/div/div/div/input', valor2=str(unidade),
+                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-2"]/div/ul/li/div/span[text() = "{str(unidade)}"]')
+                sleep(2)                     
 
                 driver.find_element(By.XPATH, '//input[@title="TREINAMENTO"]').send_keys(str(treinamento))
                 sleep(2)
@@ -240,22 +243,22 @@ root = ttk.Window()
 # Titulo
 root.title('Automatização de Preenchimento - SharePoint')
 # Janela 
-root.geometry('960x450+300+200')
+root.geometry('730x400+300+200')
 # Dimenção fixa
 root.resizable(False,False)
 root.configure(bg='#fff')
 
 # Imagem
-img = tk.PhotoImage(file=r'C:\Users\jeanaraujo\ForaDoDrive\Operações\projetos-em-andamento-cj\3.automacao_lancamento_horas_treinamento_corrigida_comGUIfuncionando\Foto\login.png')
-img_label = tk.Label(root, image=img, bg='white')
-img_label.place(x=50, y=50)  # Posições X e Y em pixels
+# img = tk.PhotoImage(file=r'C:\Users\tanuscorrea\Documents\projetos-em-andamento-cj\3.automacao_lancamento_horas_treinamento_corrigida_comGUIfuncionando\src\Foto\login.png')
+# img_label = tk.Label(root, image=img, bg='white')
+# img_label.place(x=50, y=50)  # Posições X e Y em pixels
 
 # Frame
 frame = Frame(root,width=350,height=350,bg="white")
-frame.place(x=500,y=70)
+frame.place(x=180,y=70)
 
 # Nome loguin
-titulo = tk.Label(frame, text='Login', bg='white', fg='#0000FF', font=('Microsoft YaHei UI Light', 20, 'bold'))
+titulo = tk.Label(frame, text='Lançamento de horas', bg='white', fg='#0000FF', font=('Microsoft YaHei UI Light', 18, 'bold'))
 titulo.pack(pady=10)
 
 # Imput email
