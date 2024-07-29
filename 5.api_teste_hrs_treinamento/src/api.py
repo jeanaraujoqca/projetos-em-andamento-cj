@@ -17,7 +17,7 @@ async def run_rpa(
 ):
     try:
         # Salvar o arquivo enviado
-        file_location = f"C:/Users/jeanaraujo/ForaDoDrive/Operações/Automações/Andamento/3.automacao_lancamento_horas_treinamento_corrigida/data/{file.filename}"
+        file_location = f"/tmp/{file.filename}"
         with open(file_location, "wb") as f:
             shutil.copyfileobj(file.file, f)
         
