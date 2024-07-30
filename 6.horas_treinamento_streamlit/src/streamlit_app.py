@@ -26,7 +26,9 @@ def run_rpa_script(excel_file: str, email: str, senha: str):
     
     # inicializando chrome
     service = Service(ChromeDriverManager().install())
-    options = webdriver.ChromeOptions()
+    options = Options()
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
     driver = webdriver.Chrome(service=service, options=options)
     driver.maximize_window()
     timeout = 15
