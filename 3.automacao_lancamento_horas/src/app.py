@@ -252,15 +252,16 @@ def select_file():
 def toggle_password():
     if senha_entry.cget('show') == '*':
         senha_entry.config(show='')
-        show_password_button.config(text='Ocultar Senha')
+        show_password_button.config(text='Ocultar')
     else:
         senha_entry.config(show='*')
-        show_password_button.config(text='Mostrar Senha')
+        show_password_button.config(text='Visualizar')
 
 root = ttk.Window(themename="darkly")  # Escolha o tema desejado tema que eu quero --------------------------------------
 root.geometry("600x370")  # Defina o tamanho desejado (largura x altura)
 root.resizable(False,False)
-# Nome loguin
+root.title("Plataforma de lançamento de horas")
+
 titulo = tk.Label(text='Lançamento de Horas', bg='white', fg='#0000FF', font=('Microsoft YaHei UI Light', 18, 'bold'))
 titulo.pack(pady=20)
 
@@ -289,14 +290,14 @@ file_path_label.pack()
 spacer = tk.Frame( height=15, bg='white') #espaço  vazio
 spacer.pack()
 
-file_button = ttk.Button( text='Selecionar Arquivo', command=select_file, bootstyle="info-outline")
-file_button.pack(side='left', padx=10)
+file_button = ttk.Button( text='Selecionar Arquivo', command=select_file, bootstyle="success-outline")
 file_button.place(x=90,y=270)
 # ----------------------------------------------------------------------------
 # success style
-show_password_button = ttk.Button( text='Mostrar Senha', command=toggle_password)
-show_password_button.pack(pady=(0, 10))
+show_password_button = ttk.Button( text='Visualizar', command=toggle_password , bootstyle="primary-outline")
+show_password_button.padding=(9, 9)
+show_password_button.place(x=480,y=170)
 
-submit_button = ttk.Button( text='Iniciar Automação', command=start_automation, bootstyle="success-outline")
+submit_button = ttk.Button( text='Iniciar Automação', command=start_automation, bootstyle="default-outline")
 
 root.mainloop()
