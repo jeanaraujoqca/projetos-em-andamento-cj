@@ -4,9 +4,9 @@ from tkinter import *
 from tkinter import Frame
 import pandas as pd
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
+from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -40,19 +40,26 @@ def submit_form():
     
     
     try:
-        df = pd.read_excel(selected_file_path)
-        
+        df = pd.read_excel(selected_file_path)     
+          
         # Iniciar Selenium
-        service = Service(ChromeDriverManager().install())
-        options = webdriver.ChromeOptions()
-        driver = webdriver.Chrome(service=service, options=options)
+        service = Service(GeckoDriverManager().install())
+        options = webdriver.FirefoxOptions()
+        
+        options.add_argument("--disable-extensions")     #-------------------------------------------
+        options.add_argument("--disable-popup-blocking") #-------------------------------------------
+        options.add_argument("--disable-infobars")       #-------------------------------------------
+        options.add_argument("--disable-autofill")       #------------------------------------------- 
+        
+        driver = webdriver.Firefox(service=service, options=options)
         driver.maximize_window()
-        timeout = 15
+        timeout = 30   
         wait = WebDriverWait(driver, timeout)
 
     # SharePoint URL
         url_sharepoint = 'https://queirozcavalcanti.sharepoint.com/sites/qca360/Lists/treinamentos_qca/AllItems.aspx'
 
+        driver.delete_all_cookies()     #----------------------------  #deletando os cooks
     
         # Inicia o Chrome com o url do Sharepoint
         driver.get(url_sharepoint)
@@ -60,23 +67,22 @@ def submit_form():
 
         # Realiza login
         try:
-            sleep(1)
+            sleep(2)
             email_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='i0116']")))
             email_input.send_keys(email)
-            sleep(0.5)
+            sleep(1)
             avancar_button = driver.find_element(By.XPATH, "//input[@id='idSIButton9']")
             avancar_button.click()
         except:
             pass
 
         try:
-            sleep(1)
+            sleep(2)
             senha_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='i0118']")))
             senha_input.send_keys(senha)
             sleep(1)
             avancar_button = driver.find_element(By.XPATH, "//input[@id='idSIButton9']")
             avancar_button.click()
-            sleep(3)
         except:
             pass
 
@@ -113,9 +119,13 @@ def submit_form():
                 print(f'Adicionando informações do colaborador: {colaborador}')
 
                 # Add novo treinamento
-                botao_novo = driver.find_element(By.XPATH, '//*[@id="appRoot"]/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[1]/button/span')
-                botao_novo.click()                          
-                sleep(5)
+
+                 # Aguardar até que o botão esteja clicável -------------------------------------------------------------
+                botao_novo = WebDriverWait(driver, timeout).until(
+                EC.element_to_be_clickable((By.XPATH, '//*[@id="appRoot"]/div[1]/div[2]/div[2]/div/div[2]/div[2]/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[1]/button/span')))
+                botao_novo.click() 
+                          
+                sleep(30)
                 # cuidado com esse sleep pode ter ocasionado alguma bronca
                 # Switch to iframe
                 iframe = driver.find_elements(By.XPATH, "//iframe")
@@ -156,13 +166,14 @@ def submit_form():
                                             endereco2='//*[@id="powerapps-flyout-react-combobox-view-2"]/div/div/div/div/input', valor2=str(unidade),
                                             endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-2"]/div/ul/li/div/span[text() = "{str(unidade)}"]')
                 sleep(2)                     
-
-                driver.find_element(By.XPATH, '//input[@title="TREINAMENTO"]').send_keys(str(treinamento))
+                
+                # treinamento
+                driver.find_element(By.XPATH, '//*[@id="publishedCanvas"]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div/div/div[5]/div/div/div/div[3]/div/div/div/div/input').send_keys(str(treinamento))
                 sleep(2)
 
                 clica_seleciona_informacao(endereco1='//div[@title="TIPO DO TREINAMENTO."]',
-                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-4"]/div/div/div/div/input', valor2=str(tipo_de_treinamento),
-                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-4"]/div/ul/li/div/span[text() = "{str(tipo_de_treinamento)}"]')
+                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-3"]/div/div/div/div/input', valor2=str(tipo_de_treinamento),
+                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-3"]/div/ul/li/div/span[text() = "{str(tipo_de_treinamento)}"]')
                 sleep(2)
 
                 elemento_scroll = driver.find_element(By.XPATH, '//input[@title="INSTITUIÇÃO/INSTRUTOR"]')
@@ -170,16 +181,16 @@ def submit_form():
                 sleep(.5)
 
                 clica_seleciona_informacao(endereco1='//div[@title="CATEGORIA"]',
-                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-5"]/div/div/div/div/input', valor2=str(categoria),
-                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-5"]/div/ul/li/div/span[text() = "{str(categoria)}"]')
+                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-4"]/div/div/div/div/input', valor2=str(categoria),
+                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-4"]/div/ul/li/div/span[text() = "{str(categoria)}"]')
                 sleep(2)
 
                 driver.find_element(By.XPATH, '//input[@title="INSTITUIÇÃO/INSTRUTOR"]').send_keys(str(instituicao_instrutor))
                 sleep(2)
 
                 clica_seleciona_informacao(endereco1='//div[@title="CARGA HORARIA"]',
-                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-6"]/div/div/div/div/input', valor2=str(carga_horaria),
-                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-6"]/div/ul/li/div/span[text() = "{str(carga_horaria)}"]')
+                                            endereco2='//*[@id="powerapps-flyout-react-combobox-view-5"]/div/div/div/div/input', valor2=str(carga_horaria),
+                                            endereco3=f'//*[@id="powerapps-flyout-react-combobox-view-5"]/div/ul/li/div/span[text() = "{str(carga_horaria)}"]')
                 sleep(2)
 
                 data_inicio = driver.find_element(By.XPATH, '//input[@title="INICIO DO TREINAMENTO"]')
@@ -234,63 +245,59 @@ def select_file():
     if file_path:
         selected_file_path = file_path
         submit_button.pack()
+        submit_button.place(x=300,y=270)
         messagebox.showinfo("Alerta", "Se você possui verificação em duas etapas, após iniciar a automação, você terá 60 segundos para aceitar a solicitação no seu e-mail.")  
 
-# root = ttk.Window(themename="darkly")  # Escolha o tema desejado tema que eu quero 
 
-# Inicia Tkinter
-root = ttk.Window()
-# Titulo
-root.title('Automatização de Preenchimento - SharePoint')
-# Janela 
-root.geometry('730x400+300+200')
-# Dimenção fixa
+def toggle_password():
+    if senha_entry.cget('show') == '*':
+        senha_entry.config(show='')
+        show_password_button.config(text='Ocultar')
+    else:
+        senha_entry.config(show='*')
+        show_password_button.config(text='Visualizar')
+
+root = ttk.Window(themename="darkly")  # Escolha o tema desejado tema que eu quero --------------------------------------
+root.geometry("600x370")  # Defina o tamanho desejado (largura x altura)
 root.resizable(False,False)
-root.configure(bg='#fff')
+root.title("Plataforma de lançamento de horas")
 
-# Imagem
-# img = tk.PhotoImage(file=r'C:\Users\tanuscorrea\Documents\projetos-em-andamento-cj\3.automacao_lancamento_horas_treinamento_corrigida_comGUIfuncionando\src\Foto\login.png')
-# img_label = tk.Label(root, image=img, bg='white')
-# img_label.place(x=50, y=50)  # Posições X e Y em pixels
-
-# Frame
-frame = Frame(root,width=350,height=350,bg="white")
-frame.place(x=180,y=70)
-
-# Nome loguin
-titulo = tk.Label(frame, text='Lançamento de horas', bg='white', fg='#0000FF', font=('Microsoft YaHei UI Light', 18, 'bold'))
-titulo.pack(pady=10)
+titulo = tk.Label(text='Lançamento de Horas', bg='white', fg='#0000FF', font=('Microsoft YaHei UI Light', 18, 'bold'))
+titulo.pack(pady=20)
 
 # Imput email
 
-email_label = tk.Label(frame, width=25,fg='black',bd=0,bg='white',font =('Microsoft YaHei UI Light',8,'bold'),text='Email:')
-email_label.place(x=40,y=80)
+email_label = tk.Label( width=25,fg='black',bd=0,bg='white',font =('Microsoft YaHei UI Light',8,'bold'),text='Email:')
+email_label.place(x=70,y=80)
 email_label.pack()
 
-email_entry = tk.Entry(frame, width=25,border=0,fg='black',bg='white',font =('Microsoft YaHei UI Light',10,'bold'),text='Email:')
+email_entry = tk.Entry( width=25,border=0,fg='black',bg='white',font =('Microsoft YaHei UI Light',10,'bold'),text='Email:')
 email_entry.pack()
 
 # Imput senha
-senha_label = tk.Label(frame, width=25, bg='white',font =('Microsoft YaHei UI Light',8,'bold'), text='Senha:')
+senha_label = tk.Label( width=25, bg='white',font =('Microsoft YaHei UI Light',8,'bold'), text='Senha:')
 senha_label.pack()
-senha_entry = tk.Entry(frame, width=25, bg='white',font =('Microsoft YaHei UI Light',10,'bold'), show='*')
+senha_entry = tk.Entry( width=25, bg='white',font =('Microsoft YaHei UI Light',10,'bold'), show='*')
 senha_entry.pack()
 
-spacer = tk.Frame(frame, height=15, bg='white') #espaço  vazio
+spacer = tk.Frame( height=15, bg='white') #espaço  vazio
 spacer.pack()
 # ----------------------------------------------------------------------------
 
-file_path_label = tk.Label(frame,width=25, text='')
+file_path_label = tk.Label(width=45, text='')
 file_path_label.pack()
 
-spacer = tk.Frame(frame, height=15, bg='white') #espaço  vazio
+spacer = tk.Frame( height=15, bg='white') #espaço  vazio
 spacer.pack()
 
-file_button = ttk.Button(frame, text='Selecionar Arquivo', command=select_file, bootstyle="info-outline")
-file_button.pack(side='left', padx=10)
+file_button = ttk.Button( text='Selecionar Arquivo', command=select_file, bootstyle="success-outline")
+file_button.place(x=90,y=270)
 # ----------------------------------------------------------------------------
 # success style
+show_password_button = ttk.Button( text='Visualizar', command=toggle_password , bootstyle="primary-outline")
+show_password_button.padding=(9, 9)
+show_password_button.place(x=480,y=170)
 
-submit_button = ttk.Button(frame, text='Iniciar Automação', command=start_automation, bootstyle="success-outline")
+submit_button = ttk.Button( text='Iniciar Automação', command=start_automation, bootstyle="default-outline")
 
 root.mainloop()
