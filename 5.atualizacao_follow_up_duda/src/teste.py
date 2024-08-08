@@ -9,11 +9,12 @@ import json
 
 # --- ORGANIZAR OS CAMINHOS DE DIRETÓRIO --- [ X ]
 BASE_DIR = os.getcwd()
-DATA_DIR = os.path.join(BASE_DIR, '5.atualizacao_follow_up_duda')
-DATA_DIR = os.path.join(DATA_DIR, 'data')
+DATA_DIR = os.path.join(BASE_DIR, '5.atualizacao_follow_up_duda', 'data')
+CONFIG_DIR = os.path.join(BASE_DIR, '5.atualizacao_follow_up_duda', 'config_senha')
+arquivo_config = os.path.join(CONFIG_DIR, 'config_senha.json')
 
 # --- SOLICITAR AS CREDENCIAIS PARA QUEM ESTÁ UTILIZANDO O PROGRAMA --- [ X ]
-with open(r'C:\Users\jeanaraujo\ForaDoDrive\Operacoes\projetos-em-andamento-cj\5.atualizacao_follow_up_duda\src\config_senha.json', 'r') as config_file:
+with open(arquivo_config, 'r') as config_file:
     config = json.load(config_file)
     nome_usuario = config['nome_usuario']
     email_usuario = config['email_usuario']
